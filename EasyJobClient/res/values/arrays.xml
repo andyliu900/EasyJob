@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="drawer_items">
+        <item>企业搜索</item>
+        <item>我的问题</item>
+        <item>我的轨迹</item>
+        <item>职场心语</item>
+    </string-array>
+    <!-- <array name="drawer_images">
+        <item>@drawable/ny</item>
+        <item>@drawable/tokyo</item>
+        <item>@drawable/london</item>
+    </array> -->
+</resources>
