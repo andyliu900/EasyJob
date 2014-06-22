@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="white">#FFFFFF</color>
+    <color name="light_gray">#77000000</color>
+    <color name="image_default_bg">#c9c9c9</color>
+	<color name="transparent_background">#80ffffff</color>
 </resources>

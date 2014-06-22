@@ -9,10 +9,19 @@ import android.widget.AdapterView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.ideacode.easyjob.EasyJobApplication;
 import com.ideacode.easyjob.R;
+import com.ideacode.easyjob.api.ListSearchApi;
+import com.ideacode.easyjob.data.GsonRequest;
+import com.ideacode.easyjob.model.Company;
 import com.ideacode.easyjob.util.ActionBarUtils;
 import com.ideacode.easyjob.util.ListViewUtils;
+import com.ideacode.easyjob.util.UITools;
+import com.ideacode.easyjob.view.LoadingFooter;
 import com.ideacode.easyjob.view.PageListView;
+import com.nhaarman.listviewanimations.swinginadapters.AnimationAdapter;
 
 
 /**
@@ -31,6 +40,7 @@ public class CompanySearchFragment extends BaseFragment implements SwipeRefreshL
 	PageListView mListView;
 
 	private View actionBarContainer;
+	private CompanyAdapter mAdapter;
 	private int mPage = 0;
 
 	@Override
@@ -45,7 +55,7 @@ public class CompanySearchFragment extends BaseFragment implements SwipeRefreshL
 	@Override
 	protected void initListeners() {
 		actionBarContainer = ActionBarUtils.findActionBarContainer(getActivity());
-		
+
 		mListView.setLoadNextListener(new PageListView.OnLoadNextListener() {
 			@Override
 			public void onLoadNext() {
@@ -75,7 +85,12 @@ public class CompanySearchFragment extends BaseFragment implements SwipeRefreshL
 
 	@Override
 	protected void initDatas() {
-		
+		mAdapter = new FeedsAdapter(getActivity(), mListView);
+        View header = new View(getActivity());
+        mListView.addHeaderView(header);
+        AnimationAdapter animationAdapter = new CardsAnimationAdapter(mAdapter);
+        animationAdapter.setAbsListView(mListView);
+        mListView.setAdapter(animationAdapter);
 	}
 
 	@Override
@@ -92,10 +107,53 @@ public class CompanySearchFragment extends BaseFragment implements SwipeRefreshL
 		loadData(mPage);
 	}
 
-	private void loadData(int next) {
-		if (!mSwipeLayout.isRefreshing() && (0 == next)) {
+	private void loadData(int current_page) {
+		if (!mSwipeLayout.isRefreshing() && (0 == current_page)) {
 			mSwipeLayout.setRefreshing(true);
 		}
-		//executeRequest(new GsonRequest(String.format(GagApi.LIST, mCategory.name(), next), Feed.FeedRequestData.class, responseListener(), errorListener()));
+		executeRequest(new GsonRequest(String.format(ListSearchApi.LIST, current_page), Company.CompanyRequestData.class, responseListener(), errorListener()));
 	}
+
+	private Response.Listener<Company.CompanyRequestData> responseListener() {
+        final boolean isRefreshFromTop = ("0".equals(mPage));
+        return new Response.Listener<Company.CompanyRequestData>() {
+            @Override
+            public void onResponse(final Company.CompanyRequestData response) {
+//                TaskUtils.executeAsyncTask(new AsyncTask<Object, Object, Object>() {
+//                    @Override
+//                    protected Object doInBackground(Object... params) {
+//                        if (isRefreshFromTop) {
+//                            mDataHelper.deleteAll();
+//                        }
+//                        mPage = response.getPage();
+//                        ArrayList<Feed> feeds = response.data;
+//                        mDataHelper.bulkInsert(feeds);
+//                        return null;
+//                    }
+//
+//                    @Override
+//                    protected void onPostExecute(Object o) {
+//                        super.onPostExecute(o);
+//                        if (isRefreshFromTop) {
+//                            mSwipeLayout.setRefreshing(false);
+//                        } else {
+//                            mListView.setState(LoadingFooter.State.Idle, 3000);
+//                        }
+//                    }
+//                });
+            }
+        };
+    }
+
+    @Override
+	protected Response.ErrorListener errorListener() {
+        return new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            	UITools.ToastMessage(EasyJobApplication.getContext(), R.string.loading_failed);
+                mSwipeLayout.setRefreshing(false);
+                mListView.setState(LoadingFooter.State.Idle, 3000);
+            }
+        };
+    }
 }
