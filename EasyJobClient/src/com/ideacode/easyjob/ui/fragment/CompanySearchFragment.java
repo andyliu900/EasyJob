@@ -16,6 +16,7 @@ import com.ideacode.easyjob.R;
 import com.ideacode.easyjob.api.ListSearchApi;
 import com.ideacode.easyjob.data.GsonRequest;
 import com.ideacode.easyjob.model.Company;
+import com.ideacode.easyjob.ui.adapter.CompanyAdapter;
 import com.ideacode.easyjob.util.ActionBarUtils;
 import com.ideacode.easyjob.util.ListViewUtils;
 import com.ideacode.easyjob.util.UITools;
@@ -85,12 +86,12 @@ public class CompanySearchFragment extends BaseFragment implements SwipeRefreshL
 
 	@Override
 	protected void initDatas() {
-		mAdapter = new FeedsAdapter(getActivity(), mListView);
-        View header = new View(getActivity());
-        mListView.addHeaderView(header);
-        AnimationAdapter animationAdapter = new CardsAnimationAdapter(mAdapter);
-        animationAdapter.setAbsListView(mListView);
-        mListView.setAdapter(animationAdapter);
+		mAdapter = new CompanyAdapter(getActivity(), mListView);
+		View header = new View(getActivity());
+		mListView.addHeaderView(header);
+		AnimationAdapter animationAdapter = new CardsAnimationAdapter(mAdapter);
+		animationAdapter.setAbsListView(mListView);
+		mListView.setAdapter(animationAdapter);
 	}
 
 	@Override
@@ -115,45 +116,45 @@ public class CompanySearchFragment extends BaseFragment implements SwipeRefreshL
 	}
 
 	private Response.Listener<Company.CompanyRequestData> responseListener() {
-        final boolean isRefreshFromTop = ("0".equals(mPage));
-        return new Response.Listener<Company.CompanyRequestData>() {
-            @Override
-            public void onResponse(final Company.CompanyRequestData response) {
-//                TaskUtils.executeAsyncTask(new AsyncTask<Object, Object, Object>() {
-//                    @Override
-//                    protected Object doInBackground(Object... params) {
-//                        if (isRefreshFromTop) {
-//                            mDataHelper.deleteAll();
-//                        }
-//                        mPage = response.getPage();
-//                        ArrayList<Feed> feeds = response.data;
-//                        mDataHelper.bulkInsert(feeds);
-//                        return null;
-//                    }
-//
-//                    @Override
-//                    protected void onPostExecute(Object o) {
-//                        super.onPostExecute(o);
-//                        if (isRefreshFromTop) {
-//                            mSwipeLayout.setRefreshing(false);
-//                        } else {
-//                            mListView.setState(LoadingFooter.State.Idle, 3000);
-//                        }
-//                    }
-//                });
-            }
-        };
-    }
+		final boolean isRefreshFromTop = ("0".equals(mPage));
+		return new Response.Listener<Company.CompanyRequestData>() {
+			@Override
+			public void onResponse(final Company.CompanyRequestData response) {
+				//                TaskUtils.executeAsyncTask(new AsyncTask<Object, Object, Object>() {
+				//                    @Override
+				//                    protected Object doInBackground(Object... params) {
+				//                        if (isRefreshFromTop) {
+				//                            mDataHelper.deleteAll();
+				//                        }
+				//                        mPage = response.getPage();
+				//                        ArrayList<Feed> feeds = response.data;
+				//                        mDataHelper.bulkInsert(feeds);
+				//                        return null;
+				//                    }
+				//
+				//                    @Override
+				//                    protected void onPostExecute(Object o) {
+				//                        super.onPostExecute(o);
+				//                        if (isRefreshFromTop) {
+				//                            mSwipeLayout.setRefreshing(false);
+				//                        } else {
+				//                            mListView.setState(LoadingFooter.State.Idle, 3000);
+				//                        }
+				//                    }
+				//                });
+			}
+		};
+	}
 
-    @Override
+	@Override
 	protected Response.ErrorListener errorListener() {
-        return new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-            	UITools.ToastMessage(EasyJobApplication.getContext(), R.string.loading_failed);
-                mSwipeLayout.setRefreshing(false);
-                mListView.setState(LoadingFooter.State.Idle, 3000);
-            }
-        };
-    }
+		return new Response.ErrorListener() {
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				UITools.ToastMessage(EasyJobApplication.getContext(), R.string.loading_failed);
+				mSwipeLayout.setRefreshing(false);
+				mListView.setState(LoadingFooter.State.Idle, 3000);
+			}
+		};
+	}
 }

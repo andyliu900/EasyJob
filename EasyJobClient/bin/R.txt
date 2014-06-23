@@ -373,6 +373,7 @@ int string app_name 0x7f0a000d
 int string choose_func 0x7f0a0014
 int string drawer_close 0x7f0a0010
 int string drawer_open 0x7f0a000f
+int string listitem_secondtext 0x7f0a0016
 int string loading 0x7f0a0011
 int string loading_end 0x7f0a0012
 int string loading_failed 0x7f0a0013

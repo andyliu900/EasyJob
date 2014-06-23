@@ -10,5 +10,6 @@
     <string name="loading_failed">加载失败</string>
     <string name="choose_func">选择功能</string>
     <string name="press_again_exit">再按一次退出</string>
+    <string name="listitem_secondtext">/%1$s个赞，/%2$s个评论</string>
     
 </resources>
